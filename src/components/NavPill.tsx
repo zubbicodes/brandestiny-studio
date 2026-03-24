@@ -3,14 +3,30 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
   { label: "HOME", number: "01", href: "#hero" },
-  { label: "WORK", number: "02", href: "#projects" },
-  { label: "SERVICES", number: "03", href: "#services" },
-  { label: "ABOUT", number: "04", href: "#story" },
+  { label: "ABOUT US", number: "02", href: "#story" },
+  { label: "CASE STUDIES", number: "03", href: "#projects" },
+  { label: "SERVICES", number: "04", href: "#services" },
+  { label: "LET'S CONNECT", number: "05", href: "#contact" },
 ];
 
 const NavPill = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const pillRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Scroll progress tracker -> horizontal fill
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0;
+      setScrollProgress(progress);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -22,6 +38,15 @@ const NavPill = () => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setIsOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => setIsOpen(false), 200);
+  };
+
   const scrollTo = (href: string) => {
     setIsOpen(false);
     const el = document.querySelector(href);
@@ -29,62 +54,116 @@ const NavPill = () => {
   };
 
   return (
-    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center pointer-events-none">
+    <div className="fixed top-[10px] left-1/2 -translate-x-1/2 z-50 flex items-center justify-center pointer-events-none">
       <motion.nav
         ref={pillRef}
-        className="pointer-events-auto relative flex flex-col items-start overflow-clip"
-        style={{ borderRadius: 20, padding: 20 }}
+        className="pointer-events-auto relative flex flex-col items-start"
+        style={{
+          borderRadius: 20,
+          overflow: "hidden", // Changed from clip to explicitly hidden, removes container padding
+        }}
         initial={false}
         animate={{
-          width: isOpen ? 360 : 358,
-          height: isOpen ? "min(680px, 85vh)" : 54,
+          width: isOpen ? 380 : 358,
+          height: isOpen ? "min(700px, 85vh)" : 54, // Collapsed height: 54px precisely
         }}
         transition={{
           height: { duration: 0.5, ease: [0.4, 0, 0.2, 1] },
           width: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
         }}
-        onMouseEnter={() => setIsOpen(true)}
-        onMouseLeave={() => setIsOpen(false)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        {/* Glass background */}
-        <div className="absolute inset-0 glass-dark" style={{ borderRadius: "inherit" }} />
-
-        {/* Inner header strip */}
-        <motion.div
-          className="absolute top-[6px] left-[1.5%] w-[97%] z-[2] overflow-hidden glass-header"
-          style={{ borderRadius: 16 }}
-          initial={false}
-          animate={{ height: isOpen ? 50 : 44 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+        {/* ── Outer glass background (static base) ── */}
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            borderRadius: "inherit",
+            backgroundColor: "rgba(40, 40, 40, 0.25)",
+            backdropFilter: "blur(30px)",
+            WebkitBackdropFilter: "blur(30px)",
+          }}
         />
 
-        {/* Header row: Logo + Dots toggle */}
+        {/* ── Scroll progress fill — the gray fill that grows left→right ── */}
         <div
-          className="relative z-[3] flex items-center justify-between w-full cursor-pointer interactive"
-          style={{ height: 44, minHeight: 44 }}
+          className="absolute top-0 left-0 bottom-0 z-0"
+          style={{
+            width: `${scrollProgress * 100}%`,
+            backgroundColor: "rgba(61, 61, 61, 0.55)",
+            borderRadius: "inherit",
+            transition: "width 0.1s ease-out",
+          }}
+        />
+
+        {/* ── Inner header strip (pill-in-pill) ── */}
+        {/* Takes exactly 44px inside the 54px pill, meaning 5px gap top/bottom, 5px gap left/right */}
+        <div
+          className="absolute z-[2]"
+          style={{
+            top: 5,
+            left: 5,
+            right: 5,
+            height: 44,
+            borderRadius: 16,
+            backgroundColor: "rgba(255, 255, 255, 0.15)",
+            overflow: "hidden",
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* ── Header row: Logo + Dots toggle ── */}
+        {/* Exactly positioned over the inner header strip */}
+        <div
+          className="absolute z-[3] flex items-center justify-between cursor-pointer interactive"
+          style={{ 
+            top: 5, 
+            left: 5, 
+            right: 5, 
+            height: 44,
+            paddingLeft: 20, // Perfectly indents the text & dots
+            paddingRight: 16,
+          }}
           onClick={(e) => {
             e.stopPropagation();
             setIsOpen(!isOpen);
           }}
         >
-          <span className="font-grotesk text-white text-[13px] font-semibold tracking-[0.15em] uppercase select-none">
-            <span className="text-cream">BR</span>ANDESTINY
+          {/* Logo text — using custom HelveticaNeue Ext file */}
+          <span
+            className="select-none whitespace-nowrap"
+            style={{
+              fontFamily: "'HelveticaNeue Ext', sans-serif",
+              fontSize: 16, // Adjusted slightly since extended fonts tend to render larger
+              fontWeight: 'bold',
+              letterSpacing: "0.01em", // Extended fonts usually benefit from tighter kerning
+              textTransform: "uppercase",
+              color: "#ffffff",
+              display: "flex",
+              alignItems: "center",
+              transform: "translateY(1px)", // Perfect visual alignment center
+            }}
+          >
+            <span style={{ color: "#fde3c6", marginRight: "1px" }}>BR</span>ANDESTINY
           </span>
 
-          {/* Animated dots toggle */}
-          <div className="relative w-[22px] h-[22px] flex-shrink-0">
-            {/* 4 corner dots + 2 center dots */}
+          {/* ── Animated dots toggle — grouped perfectly right ── */}
+          <div
+            className="relative flex-shrink-0"
+            style={{ width: 18, height: 18 }}
+          >
             {[
-              { id: "tl", closed: { top: 0, left: 0 }, open: { top: "50%", left: "50%", x: "-50%", y: "-50%", opacity: 0 } },
-              { id: "bl", closed: { bottom: 0, left: 0 }, open: { top: "50%", left: "50%", x: "-50%", y: "-50%", opacity: 0 } },
-              { id: "tr", closed: { top: 0, right: 0 }, open: { top: "50%", right: "50%", x: "50%", y: "-50%", opacity: 0 } },
-              { id: "br", closed: { bottom: 0, right: 0 }, open: { top: "50%", right: "50%", x: "50%", y: "-50%", opacity: 0 } },
+              { id: "tl", closed: { top: 0, left: 0, opacity: 1 }, open: { top: "50%", left: "50%", x: "-50%", y: "-50%", opacity: 0 } },
+              { id: "bl", closed: { bottom: 0, left: 0, opacity: 1 }, open: { top: "50%", left: "50%", x: "-50%", y: "-50%", opacity: 0 } },
+              { id: "tr", closed: { top: 0, right: 0, opacity: 1 }, open: { top: "50%", right: "50%", x: "50%", y: "-50%", opacity: 0 } },
+              { id: "br", closed: { bottom: 0, right: 0, opacity: 1 }, open: { top: "50%", right: "50%", x: "50%", y: "-50%", opacity: 0 } },
               { id: "cl", closed: { top: "50%", left: "50%", x: "-50%", y: "-50%", opacity: 0 }, open: { top: "50%", left: "15%", x: "-50%", y: "-50%", opacity: 1 } },
               { id: "cr", closed: { top: "50%", right: "50%", x: "50%", y: "-50%", opacity: 0 }, open: { top: "50%", right: "15%", x: "50%", y: "-50%", opacity: 1 } },
             ].map((dot) => (
               <motion.div
                 key={dot.id}
-                className="absolute w-[7px] h-[7px] rounded-full bg-white"
+                className="absolute rounded-full bg-white"
+                style={{ width: 6, height: 6 }}
                 initial={false}
                 animate={isOpen ? dot.open : dot.closed}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -93,48 +172,84 @@ const NavPill = () => {
           </div>
         </div>
 
-        {/* Expanded content */}
+        {/* ── Expanded content ── */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              className="relative z-[1] flex flex-col flex-1 justify-between w-full pt-8"
+              className="relative z-[1] flex flex-col flex-1 justify-between w-full"
+              style={{
+                marginTop: 64, // Pushes it exactly below the header strip
+                paddingLeft: 25,
+                paddingRight: 25,
+                paddingBottom: 25,
+              }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, delay: 0.15 }}
             >
               {/* Nav links */}
-              <div className="flex flex-col gap-[8px]">
-                {navItems.map((item) => (
-                  <button
+              <div className="flex flex-col gap-[12px]">
+                {navItems.map((item, i) => (
+                  <motion.button
                     key={item.label}
                     onClick={() => scrollTo(item.href)}
                     className="group flex items-center gap-[10px] relative cursor-pointer text-left w-fit interactive"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.1 + i * 0.05 }}
                   >
-                    <span className="font-sans text-[36px] font-medium text-white leading-[1.05] tracking-normal">
+                    <span
+                      className="text-white leading-[1.05] tracking-normal uppercase"
+                      style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 38, fontWeight: 500 }}
+                    >
                       {item.label}
                     </span>
-                    <span className="font-grotesk text-[20px] font-light text-[#7a7a7a] self-start mt-[2px]">
+                    <span
+                      className="self-start"
+                      style={{
+                        fontFamily: "'Space Grotesk', sans-serif",
+                        fontSize: 18,
+                        fontWeight: 300,
+                        color: "#7a7a7a",
+                        marginTop: 4,
+                      }}
+                    >
                       {item.number}
                     </span>
                     {/* Animated underline */}
                     <span className="absolute bottom-0 left-0 h-[1px] bg-white w-[1%] group-hover:w-full transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]" />
-                  </button>
+                  </motion.button>
                 ))}
               </div>
 
               {/* CTA at bottom */}
-              <div className="mt-auto pt-4">
+              <motion.div
+                className="mt-auto pt-8"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.4 }}
+              >
                 <button
                   onClick={() => scrollTo("#contact")}
                   className="group flex items-center gap-[10px] relative cursor-pointer text-left w-fit interactive"
                 >
-                  <span className="font-sans text-[36px] font-medium text-white leading-[1.05]">
-                    GET IN TOUCH
+                  <span
+                    className="text-white leading-[1.05] uppercase"
+                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 38, fontWeight: 500 }}
+                  >
+                    BOOK INTRO CALL
                   </span>
                   <span className="absolute bottom-0 left-0 h-[1px] bg-white w-[1%] group-hover:w-full transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]" />
                 </button>
-              </div>
+
+                <motion.button
+                  onClick={() => setIsOpen(false)}
+                  className="mt-6 text-[#7a7a7a] text-sm flex items-center gap-2 hover:text-white transition-colors interactive"
+                >
+                  <span>↓</span>
+                </motion.button>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>

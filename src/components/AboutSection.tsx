@@ -7,21 +7,24 @@ const AboutSection = () => {
   };
 
   return (
-    <section className="w-full bg-background py-24 md:py-40 px-6 md:px-12">
+    <section className="w-full py-28 md:py-44 px-6 md:px-10" style={{ background: "var(--black-2)" }}>
       <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
         {/* Left: Tagline + CTAs */}
         <motion.div
           className="lg:w-[40%] flex flex-col justify-between"
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <div>
             <span className="text-[#a0a0a0] font-grotesk text-xs uppercase tracking-[0.15em] mb-6 block">
               About the Studio
             </span>
-            <h2 className="font-display text-white text-[clamp(2rem,3.5vw,3.5em)] font-normal leading-[1] mb-10">
+            <h2
+              className="font-display text-white font-bold leading-[1.1] mb-12"
+              style={{ fontSize: "clamp(2.2rem, 4vw, 4.2rem)" }}
+            >
               Award Winning
               <br />
               Design Studio
@@ -29,32 +32,41 @@ const AboutSection = () => {
           </div>
 
           <div className="flex flex-col gap-3 mt-6">
-            <button
+            <motion.button
               onClick={() => scrollTo("#contact")}
-              className="group inline-flex items-center justify-between w-full max-w-[280px] border border-[hsl(0_0%_100%/0.45)] text-white text-[13px] font-medium tracking-wider uppercase px-5 py-3.5 hover:bg-white hover:text-[#020202] transition-all duration-[450ms] interactive"
+              className="group inline-flex items-center justify-between w-full max-w-[300px] text-[#020202] text-[13px] font-semibold tracking-wider uppercase px-6 py-4 transition-all duration-[450ms] interactive"
+              style={{ background: "#fde3c6", borderRadius: 10 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               Book a free strategy session
-              <ArrowUpRight size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </button>
-            <button
+              <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </motion.button>
+            <motion.button
               onClick={() => scrollTo("#projects")}
-              className="group inline-flex items-center justify-between w-full max-w-[280px] border border-[hsl(0_0%_100%/0.25)] text-white text-[13px] font-medium tracking-wider uppercase px-5 py-3.5 hover:bg-white hover:text-[#020202] transition-all duration-[450ms] interactive"
+              className="group inline-flex items-center justify-between w-full max-w-[300px] border text-white text-[13px] font-medium tracking-wider uppercase px-6 py-4 hover:bg-white hover:text-[#020202] transition-all duration-[450ms] interactive"
+              style={{ borderColor: "rgba(255,255,255,0.25)", borderRadius: 10 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               Explore case studies
-              <ArrowUpRight size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </button>
+              <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </motion.button>
           </div>
         </motion.div>
 
         {/* Right: Big editorial tagline */}
         <motion.div
           className="lg:w-[60%]"
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7, delay: 0.15 }}
+          transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h2 className="font-display text-white text-[clamp(2.5rem,5.5vw,5.5em)] font-normal leading-[1] tracking-tight">
+          <h2
+            className="font-display text-white font-bold leading-[1.15] tracking-tight"
+            style={{ fontSize: "clamp(3rem, 6.5vw, 6.5rem)" }}
+          >
             THE FUSION
             <br />
             OF BRAND

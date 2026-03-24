@@ -5,10 +5,10 @@ const services = ["WEBSITE", "MOBILE APP", "WEB APP", "BRAND", "SOCIAL MEDIA"];
 
 const CTASection = () => {
   return (
-    <section id="contact" className="w-full bg-background px-6 md:px-12 py-20 md:py-32">
-      <div className="text-center max-w-4xl mx-auto">
+    <section id="contact" className="w-full px-6 md:px-10 py-24 md:py-36" style={{ background: "var(--black-2)" }}>
+      <div className="text-center max-w-5xl mx-auto">
         <motion.p
-          className="text-muted-foreground text-lg mb-6"
+          className="text-white/50 text-lg mb-8 font-grotesk"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -16,15 +16,16 @@ const CTASection = () => {
           Let's talk about your
         </motion.p>
 
-        <div className="flex flex-col items-center mb-12">
+        <div className="flex flex-col items-center mb-14">
           {services.map((service, i) => (
             <motion.span
               key={service}
-              className="font-display text-foreground text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-normal leading-[1.1] tracking-tight"
-              initial={{ opacity: 0, y: 20 }}
+              className="font-display text-white font-bold leading-[1.1] tracking-tight"
+              style={{ fontSize: "clamp(2.5rem, 6vw, 6.5rem)" }}
+              initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
+              transition={{ delay: i * 0.07, duration: 0.5 }}
             >
               {service}
             </motion.span>
@@ -40,15 +41,17 @@ const CTASection = () => {
         >
           <a
             href="mailto:info@brandestiny.co"
-            className="inline-flex items-center gap-2 bg-cream text-background text-xs font-medium tracking-wider uppercase px-6 py-3 rounded-full hover:bg-cream-light transition-all duration-300"
+            className="inline-flex items-center gap-3 text-[#020202] text-[13px] font-semibold tracking-wider uppercase px-7 py-4 hover:brightness-110 transition-all duration-300"
+            style={{ background: "#fde3c6", borderRadius: 100 }}
           >
             Let's Connect
             <ArrowRight size={14} />
           </a>
           <a
             href="#contact"
-            className="inline-flex items-center gap-2 border text-foreground text-xs font-medium tracking-wider uppercase px-6 py-3 rounded-full hover:bg-foreground hover:text-background transition-all duration-300"
-            style={{ borderColor: "hsl(0 0% 100% / 0.45)" }}
+            className="inline-flex items-center gap-3 text-white text-[13px] font-semibold tracking-wider uppercase px-7 py-4 hover:bg-white hover:text-[#020202] transition-all duration-300"
+            style={{ border: "1px solid rgba(255,255,255,0.35)", borderRadius: 100 }}
+            onClick={(e) => e.preventDefault()}
           >
             Book a Call
             <ArrowRight size={14} />
@@ -56,25 +59,33 @@ const CTASection = () => {
         </motion.div>
       </div>
 
-      {/* Spinning logo */}
+      {/* Marquee brand strip */}
       <motion.div
-        className="mt-20 md:mt-32 flex items-center justify-center overflow-hidden"
+        className="mt-24 md:mt-36 overflow-hidden"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
       >
-        <div className="relative flex items-center gap-6">
-          <span className="font-display text-foreground text-5xl md:text-7xl lg:text-8xl font-normal whitespace-nowrap opacity-20 tracking-tight">
-            BRANDESTINY
-          </span>
-          <div className="w-16 h-16 md:w-24 md:h-24 rounded-full border border-foreground/20 flex items-center justify-center animate-spin-slow">
-            <span className="text-[8px] md:text-[10px] font-grotesk text-foreground/50 uppercase tracking-[0.2em]">
-              Brandestiny Co
-            </span>
-          </div>
-          <span className="font-display text-foreground text-5xl md:text-7xl lg:text-8xl font-normal whitespace-nowrap opacity-20 tracking-tight">
-            BRANDESTINY
-          </span>
+        <div className="marquee-track">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="flex items-center gap-8 mx-8 flex-shrink-0">
+              <span
+                className="font-display text-white/[0.06] font-bold whitespace-nowrap tracking-tight"
+                style={{ fontSize: "clamp(4rem, 8vw, 8rem)" }}
+              >
+                BRANDESTINY
+              </span>
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center flex-shrink-0" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+                <motion.span
+                  className="text-[8px] md:text-[10px] font-grotesk text-white/30 uppercase tracking-[0.2em]"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                >
+                  ✦
+                </motion.span>
+              </div>
+            </div>
+          ))}
         </div>
       </motion.div>
     </section>

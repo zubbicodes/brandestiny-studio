@@ -1,5 +1,9 @@
-import { motion } from "framer-motion";
 import { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const steps = [
   {
@@ -21,113 +25,153 @@ const steps = [
 
 const HowWeWork = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+  const headingRef = useRef<HTMLDivElement>(null);
+  const stepsContainerRef = useRef<HTMLDivElement>(null);
+  const stepsRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useGSAP(() => {
+    // Ensure elements exist
+    if (!containerRef.current || !headingRef.current || !stepsContainerRef.current) return;
+
+    // Reset initial states
+    stepsRefs.current.forEach((step, i) => {
+      if (!step) return;
+      if (i > 0) {
+        gsap.set(step, { autoAlpha: 0, y: 50 });
+      } else {
+        gsap.set(step, { autoAlpha: 1, y: 0 }); 
+      }
+    });
+
+    // Create the main pinned scroll timeline
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: stepsContainerRef.current,
+        start: "top top",
+        end: "+=2000", // Total scroll distance for steps only
+        pin: true,
+        scrub: 1, // Smooth scrubbing 
+        anticipatePin: 1,
+      }
+    });
+
+    // Animate between steps 
+    // Step 1 to Step 2
+    tl.to(stepsRefs.current[0], {
+      autoAlpha: 0,
+      y: -50,
+      duration: 1,
+      ease: "power2.inOut"
+    }, "+=1") // Wait a bit before transitioning
+    .to(stepsRefs.current[1], {
+      autoAlpha: 1,
+      y: 0,
+      duration: 1,
+      ease: "power2.inOut"
+    }, "<0.5"); // Start bringing in step 2 while step 1 leaves
+
+    // Step 2 to Step 3
+    tl.to(stepsRefs.current[1], {
+      autoAlpha: 0,
+      y: -50,
+      duration: 1,
+      ease: "power2.inOut"
+    }, "+=1")
+    .to(stepsRefs.current[2], {
+      autoAlpha: 1,
+      y: 0,
+      duration: 1,
+      ease: "power2.inOut"
+    }, "<0.5");
+
+    // Hold step 3 for a bit at the end
+    tl.to({}, { duration: 1 });
+
+  }, { scope: containerRef });
+
   return (
-    <section ref={containerRef} className="w-full relative" style={{ background: "var(--black-2)" }}>
-      {/* Main Heading — Centered and large */}
-      <div className="h-screen flex flex-col items-center justify-center px-6 text-center">
-        <motion.h2 
+    <section 
+      ref={containerRef} 
+      className="relative w-full overflow-hidden" 
+      style={{ background: "var(--black-2)" }}
+    >
+      {/* Heading Layer - Non pinned */}
+      <div 
+        ref={headingRef}
+        className="w-full h-[60vh] flex flex-col items-center justify-center px-6 text-center"
+      >
+        <h2
           className="text-white font-display font-medium leading-[1.1] max-w-4xl"
           style={{ fontSize: "clamp(2.5rem, 5vw, 5rem)" }}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           I turn raw ideas into products that work and grow.
-        </motion.h2>
-        
-        {/* Scroll indicator or line starting from here */}
+        </h2>
         <div className="mt-20 w-[1px] h-32 border-l border-dashed border-[#2d5af1]/40" />
       </div>
 
-      {/* Steps Container — Stacking Effect */}
-      <div className="relative">
-        {/* Vertical Dashed Line connecting everything */}
-        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[1px] border-l border-dashed border-[#2d5af1]/30 z-[1]" />
+      {/* Steps Layer - Pinned Area */}
+      <div 
+        ref={stepsContainerRef}
+        className="relative h-screen flex items-center justify-center z-10 w-full"
+      >
+        {/* Background Dashed Line */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[1px] border-l border-dashed border-[#2d5af1]/30 z-0" />
 
-        {steps.map((step, i) => (
-          <div 
-            key={step.number} 
-            className="relative h-[120vh]"
-            style={{ zIndex: i + 2 }}
-          >
-            <div 
-              className="sticky top-0 h-screen flex items-center justify-center overflow-hidden shadow-[0_-20px_50px_rgba(0,0,0,0.5)]"
-              style={{ background: "var(--black-2)" }}
-            >
-              <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:px-20 flex flex-col items-center relative h-full justify-center">
-                
-                <div className="w-full flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
-                  {/* Left Title */}
-                  <motion.div 
-                    className="md:w-1/3 text-center md:text-left"
-                    initial={{ opacity: 0, x: -30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ margin: "-20%" }}
-                    transition={{ duration: 0.8 }}
-                  >
-                    <h3 className="text-white font-display font-medium text-2xl md:text-4xl leading-tight">
-                      {step.title}
-                    </h3>
-                  </motion.div>
-
-                  {/* Center Large Number */}
-                  <motion.div 
-                    className="md:w-1/3 flex justify-center"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ margin: "-20%" }}
-                    transition={{ duration: 0.8 }}
-                  >
-                    <span 
-                      className="text-white font-display font-bold leading-none select-none"
-                      style={{ fontSize: "clamp(12rem, 25vw, 30rem)" }}
-                    >
-                      {step.number}
-                    </span>
-                  </motion.div>
-
-                  {/* Right Description */}
-                  <motion.div 
-                    className="md:w-1/3 text-center md:text-right flex md:justify-end"
-                    initial={{ opacity: 0, x: 30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ margin: "-20%" }}
-                    transition={{ duration: 0.8 }}
-                  >
-                    <p className="text-white/70 font-display text-base md:text-lg leading-relaxed max-w-[320px]">
-                      {step.description}
-                    </p>
-                  </motion.div>
+        <div className="max-w-[1440px] w-full mx-auto px-6 md:px-12 lg:px-20 flex flex-col items-center relative h-full justify-center z-10">
+          
+          {/* Steps Content Area - Stacked absolutely */}
+          <div className="w-full flex-1 flex flex-col justify-center relative min-h-[400px]">
+            {steps.map((step, i) => (
+              <div 
+                key={`step-${step.number}`}
+                ref={el => { stepsRefs.current[i] = el }}
+                className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex flex-col md:flex-row items-center justify-between gap-12"
+              >
+                {/* Left Title */}
+                <div className="md:w-1/3 text-center md:text-left">
+                  <h3 className="text-white font-display font-medium text-2xl md:text-4xl leading-tight">
+                    {step.title}
+                  </h3>
                 </div>
 
-                {/* Step Button — Pink/Peach as in image */}
-                <motion.div 
-                  className="mt-12 md:mt-16 z-10"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ margin: "-10%" }}
-                >
-                  <a 
-                    href="#contact"
-                    className="inline-flex items-center justify-center bg-[#f78ca0] text-black font-bold text-xs md:text-sm tracking-widest uppercase px-10 py-4 rounded-xl hover:scale-105 transition-transform shadow-lg"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
-                    }}
+                {/* Center Large Number */}
+                <div className="md:w-1/3 flex justify-center">
+                  <span 
+                    className="text-white font-display font-bold leading-none select-none"
+                    style={{ fontSize: "clamp(12rem, 25vw, 30rem)" }}
                   >
-                    BOOK INTRO CALL
-                  </a>
-                </motion.div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+                    {step.number}
+                  </span>
+                </div>
 
-      {/* Space at the end */}
-      <div className="h-32" style={{ background: "var(--black-2)" }} />
+                {/* Right Description */}
+                <div className="md:w-1/3 text-center md:text-right flex md:justify-end">
+                  <p className="text-white/70 font-display text-base md:text-lg leading-relaxed max-w-[320px]">
+                    {step.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Persistent Step UI Area (Button) */}
+          <div className="flex flex-col items-center mb-12 relative z-20">
+            {/* Step Button */}
+            <a
+              href="#contact"
+              className="inline-flex items-center justify-center text-black font-bold text-xs md:text-sm tracking-[0.2em] uppercase px-10 py-4 rounded-xl hover:scale-105 transition-transform shadow-[0_0_20px_rgba(253,227,198,0.3)] mb-8"
+              style={{ backgroundColor: "#FDE3C6" }}
+              onClick={(e) => {
+                e.preventDefault();
+                document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Let's Connect
+            </a>
+          </div>
+
+        </div>
+      </div>
     </section>
   );
 };

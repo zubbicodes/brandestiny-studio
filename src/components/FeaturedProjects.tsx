@@ -1,11 +1,17 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
 import { ArrowRight } from "lucide-react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import project1 from "@/assets/project-1.png";
 import project2 from "@/assets/project-2.png";
 import project3 from "@/assets/project-3.png";
 import project4 from "@/assets/project-4.png";
 import project5 from "@/assets/project-5.png";
 import project6 from "@/assets/project-6.png";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
   { id: 1, image: project1, name: "Furniture & Woodwork", category: "Art Direction", year: "2026", tags: ["Web Design", "Development"] },
@@ -17,24 +23,71 @@ const projects = [
 ];
 
 const FeaturedProjects = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rightColumnRef = useRef<HTMLDivElement>(null);
+  const rightTextRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    if (!containerRef.current) return;
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 768px)", () => {
+      // Pinning the right column
+      if (rightColumnRef.current && containerRef.current) {
+        ScrollTrigger.create({
+          trigger: rightColumnRef.current,
+          start: "top top",
+          endTrigger: containerRef.current,
+          end: "bottom bottom",
+          pin: true,
+        });
+      }
+    });
+
+    // Project cards animation
+    const cards = gsap.utils.toArray(".project-card");
+    cards.forEach((card: any, i) => {
+      gsap.from(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%",
+          toggleActions: "play none none none"
+        },
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        delay: (i % 2) * 0.1,
+        ease: "power3.out"
+      });
+    });
+
+    // Right text area animation
+    if (rightTextRef.current) {
+      gsap.from(rightTextRef.current, {
+        scrollTrigger: {
+          trigger: rightTextRef.current,
+          start: "top 85%",
+          toggleActions: "play none none none"
+        },
+        opacity: 0,
+        x: 30,
+        duration: 0.8,
+        ease: "power3.out"
+      });
+    }
+  }, { scope: containerRef });
+
   return (
-    <section id="projects" className="w-full py-20 md:py-32" style={{ background: "var(--black-2)" }}>
+    <section ref={containerRef} id="projects" className="w-full py-20 md:py-32" style={{ background: "var(--black-2)" }}>
       <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col md:flex-row gap-16 md:gap-24 items-start">
         {/* Left: project grid (Scrollable) */}
         <div className="md:w-[60%] space-y-1">
           {projects.map((project, i) => (
-            <motion.a
+            <a
               key={project.id}
               href="#"
               className="project-card block relative aspect-[16/10] overflow-hidden group cursor-pointer"
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ 
-                duration: 0.8, 
-                delay: i % 2 * 0.1, // Slight stagger for grid look if needed
-                ease: [0.16, 1, 0.3, 1] 
-              }}
               onClick={(e) => e.preventDefault()}
             >
               <img
@@ -66,18 +119,13 @@ const FeaturedProjects = () => {
                   </div>
                 </div>
               </div>
-            </motion.a>
+            </a>
           ))}
         </div>
 
-        {/* Right: heading + CTA — Sticky at center */}
-        <div className="md:w-[40%] md:sticky md:top-0 md:h-screen flex flex-col justify-center self-start">
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
+        {/* Right: heading + CTA — Pinned using GSAP */}
+        <div ref={rightColumnRef} className="md:w-[40%] md:h-screen flex flex-col justify-center">
+          <div ref={rightTextRef}>
             <div className="flex items-baseline gap-4 mb-2">
               <h2
                 className="font-display text-white font-bold leading-[0.9]"
@@ -99,17 +147,15 @@ const FeaturedProjects = () => {
               Projects
             </h2>
 
-            <motion.a
+            <a
               href="#projects"
-              className="group inline-flex items-center justify-between gap-4 border border-white/20 text-white text-[11px] font-bold tracking-[0.2em] uppercase px-8 py-5 hover:bg-white hover:text-[#020202] transition-all duration-500 w-full rounded-full"
+              className="group inline-flex items-center justify-between gap-4 border border-white/20 text-white text-[11px] font-bold tracking-[0.2em] uppercase px-8 py-5 hover:bg-white hover:text-[#020202] hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 w-full rounded-full"
               onClick={(e) => e.preventDefault()}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
             >
               View All
               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-            </motion.a>
-          </motion.div>
+            </a>
+          </div>
         </div>
       </div>
     </section>

@@ -16,6 +16,7 @@ export default {
       fontFamily: {
         sans: ['"DM Sans"', 'sans-serif'],
         grotesk: ['"Space Grotesk"', 'sans-serif'],
+        pixter: ['"Pixter Architekt"', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

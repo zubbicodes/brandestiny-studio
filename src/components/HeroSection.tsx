@@ -27,7 +27,7 @@ const HeroSection = () => {
         <img
           src={heroImg}
           alt="Creative visual"
-          className="w-[300px] md:w-[400px] lg:w-[500px] xl:w-[560px] object-contain"
+          className="w-[300px] md:w-[400px] lg:w-[500px] xl:w-[600px] object-contain opacity-80"
           style={{
             filter: "drop-shadow(0 20px 60px rgba(0,0,0,0.5))",
             animation: "float 6s ease-in-out infinite",
@@ -35,12 +35,30 @@ const HeroSection = () => {
         />
       </motion.div>
 
-      {/* Bottom nav labels — editorial style / artemiilebedev */}
-      <div className="absolute bottom-14 md:bottom-20 left-0 right-0 z-[2] px-6 md:px-10 flex justify-between items-end">
+      {/* Central horizontal dashed line and crosshair */}
+      <div className="absolute inset-0 flex items-center justify-center z-[1] pointer-events-none">
+        <div className="w-full px-6 md:px-10 flex items-center justify-between relative">
+          {/* Left dashed line */}
+          <div className="flex-grow h-[1px] border-t border-dashed border-[#2d5af1]/40" />
+          
+          {/* Center Crosshair */}
+          <div className="relative w-8 h-8 flex items-center justify-center mx-4">
+            <div className="absolute w-full h-[1px] bg-[#2d5af1]/60 rotate-45" />
+            <div className="absolute w-full h-[1px] bg-[#2d5af1]/60 -rotate-45" />
+            <div className="w-1 h-1 bg-[#2d5af1] rounded-full" />
+          </div>
+
+          {/* Right dashed line */}
+          <div className="flex-grow h-[1px] border-t border-dashed border-[#2d5af1]/40" />
+        </div>
+      </div>
+
+      {/* Main navigation labels — Centered vertically as per image */}
+      <div className="absolute inset-0 z-[2] px-6 md:px-10 flex justify-between items-center pointer-events-none">
         <motion.button
           onClick={() => scrollTo("#projects")}
-          className="font-display text-white font-bold leading-none hover-blur interactive"
-          style={{ fontSize: "clamp(3rem, 7vw, 7rem)" }}
+          className="font-pixter text-white font-normal leading-none hover-blur interactive pointer-events-auto"
+          style={{ fontSize: "clamp(3.5rem, 8vw, 8.5rem)" }}
           initial={{ opacity: 0, x: -60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -50,8 +68,8 @@ const HeroSection = () => {
 
         <motion.button
           onClick={() => scrollTo("#services")}
-          className="font-display text-white font-bold leading-none hover-blur interactive"
-          style={{ fontSize: "clamp(3rem, 7vw, 7rem)" }}
+          className="font-pixter text-white font-normal leading-none hover-blur interactive pointer-events-auto"
+          style={{ fontSize: "clamp(3.5rem, 8vw, 8.5rem)" }}
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -60,38 +78,40 @@ const HeroSection = () => {
         </motion.button>
       </div>
 
-      {/* Announcement card — cream background */}
+      {/* Announcement card — matching image style */}
       <motion.div
-        className="absolute bottom-14 md:bottom-20 right-6 md:right-10 z-[3] hidden lg:flex"
+        className="absolute bottom-10 right-6 md:right-10 z-[3] hidden lg:flex"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
       >
         <a
           href="#projects"
-          className="flex items-start gap-3 p-[6px] text-[#020202] no-underline hover:scale-[1.02] transition-transform duration-300"
-          style={{ background: "#ffeddc", maxWidth: "26rem" }}
+          className="flex items-stretch bg-white p-[2px] text-[#020202] no-underline hover:scale-[1.02] transition-transform duration-300 shadow-2xl"
+          style={{ width: "380px" }}
           onClick={(e) => {
             e.preventDefault();
             scrollTo("#projects");
           }}
         >
-          <div className="w-[120px] h-[100px] flex-shrink-0 overflow-hidden">
-            <img src={project1} alt="Latest project" className="w-full h-full object-cover" />
+          <div className="w-[140px] aspect-square flex-shrink-0 overflow-hidden bg-black p-1">
+            <img src={project1} alt="Latest project" className="w-full h-full object-cover opacity-80" />
           </div>
-          <div className="flex flex-col justify-center py-1 pr-2">
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-grotesk font-medium uppercase tracking-wider text-[#020202]/60">
+          <div className="flex flex-col justify-between flex-grow p-4 bg-white">
+            <div className="flex justify-between items-start">
+              <span className="text-[10px] font-grotesk font-bold uppercase tracking-widest text-[#020202]">
                 new project
               </span>
-              <span className="text-[14px]">↗</span>
+              <span className="text-[12px] font-bold">↗</span>
             </div>
-            <h4 className="text-[15px] font-semibold leading-tight mt-1 text-[#020202]">
-              Furniture & Woodwork
-            </h4>
-            <p className="text-[12px] text-[#020202]/50 mt-0.5">
-              Web Design & Development
-            </p>
+            <div>
+              <h4 className="text-[18px] font-bold leading-tight text-[#020202] capitalize">
+                Furniture & woodwork
+              </h4>
+              <p className="text-[11px] text-[#020202]/60 mt-1 font-medium">
+                Web Design & Development
+              </p>
+            </div>
           </div>
         </a>
       </motion.div>

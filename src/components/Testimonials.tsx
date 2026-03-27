@@ -30,7 +30,7 @@ const testimonials = [
 
 const Testimonials = () => {
   // Double the testimonials for infinite marquee effect
-  const doubledTestimonials = [...testimonials, ...testimonials];
+  const doubledTestimonials = [...testimonials, ...testimonials, ...testimonials];
 
   return (
     <section className="w-full py-24 md:py-36 overflow-hidden" style={{ background: "var(--black-2)" }}>
@@ -50,15 +50,15 @@ const Testimonials = () => {
       {/* Auto Scroll Marquee with Pause on Hover */}
       <div className="relative flex overflow-hidden group/marquee">
         <motion.div 
-          className="flex gap-6 animate-marquee-slow"
+          className="flex gap-8"
           animate={{
-            x: [0, -1600], // Adjust based on content width
+            x: [0, -1712], // Exactly 4 cards (400px each) + 4 gaps (28px/7rem each)
           }}
           transition={{
             x: {
               repeat: Infinity,
               repeatType: "loop",
-              duration: 30,
+              duration: 40,
               ease: "linear",
             },
           }}
@@ -68,8 +68,8 @@ const Testimonials = () => {
           {doubledTestimonials.map((t, i) => (
             <motion.div
               key={i}
-              className="flex-shrink-0 w-[300px] md:w-[400px] p-8 md:p-10 rounded-[32px] flex flex-col min-h-[450px] transition-all duration-500 bg-[#1a1a1a] text-white hover:bg-white hover:text-black group/card"
-              whileHover={{ scale: 1.02 }}
+              className="flex-shrink-0 w-[300px] md:w-[400px] p-8 md:p-10 rounded-[32px] flex flex-col min-h-[450px] transition-all duration-500 bg-[#1a1a1a] text-white hover:bg-white hover:text-black group/card border border-white/5"
+              whileHover={{ scale: 1.01, y: -5 }}
             >
               {/* Large Quote Icon */}
               <div className="mb-8">

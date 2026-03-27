@@ -1,5 +1,6 @@
-import NavPill from "@/components/NavPill";
 import CustomCursor from "@/components/CustomCursor";
+import SmoothScroll from "@/components/SmoothScroll";
+import NavPill from "@/components/NavPill";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import ServicesSection from "@/components/ServicesSection";
@@ -13,20 +14,22 @@ import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--black-2)" }}>
-      <CustomCursor />
-      <NavPill />
-      <HeroSection />
-      <AboutSection />
-      <ServicesSection />
-      <FeaturedProjects />
-      <OurStory />
-      <HowWeWork />
-      <Testimonials />
-      <CTASection />
-      <NextPageBar />
-      <Footer />
-    </div>
+    <SmoothScroll>
+      <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--black-2)" }}>
+        <CustomCursor />
+        <NavPill />
+        <HeroSection />
+        <AboutSection />
+        <ServicesSection />
+        <FeaturedProjects />
+        <OurStory />
+        <HowWeWork />
+        <Testimonials />
+        <CTASection />
+        <NextPageBar />
+        <Footer />
+      </div>
+    </SmoothScroll>
   );
 };
 

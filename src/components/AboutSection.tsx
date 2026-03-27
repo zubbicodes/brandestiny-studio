@@ -7,8 +7,8 @@ const AboutSection = () => {
   };
 
   return (
-    <section className="w-full py-28 md:py-44 px-6 md:px-10" style={{ background: "var(--black-2)" }}>
-      <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
+    <section className="w-full py-28 md:py-44" style={{ background: "var(--black-2)" }}>
+      <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col lg:flex-row gap-16 lg:gap-24">
         {/* Left: Tagline + CTAs */}
         <motion.div
           className="lg:w-[40%] flex flex-col justify-between"

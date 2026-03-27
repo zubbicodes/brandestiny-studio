@@ -7,6 +7,14 @@
   font-style: normal;
   font-display: swap;
 }
+
+@font-face {
+  font-family: 'Pixter Architekt';
+  src: url('./fonts/Pixter%20Architekt.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -73,7 +81,42 @@
     font-size: clamp(14px, 1vw, 16px);
   }
 
+  * {
+    cursor: none !important;
+  }
+
+  a, button, .interactive {
+    cursor: none !important;
+  }
+
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
+
+  /* Ensure sticky elements work with Lenis */
+  [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
   body {
+    margin: 0;
+    overflow-y: scroll; /* Force scrollbar to prevent layout shift */
     @apply bg-background text-foreground;
     font-family: 'DM Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -83,6 +126,7 @@
     letter-spacing: -0.01em;
     overflow-x: hidden;
     background-color: var(--black-2);
+    color: white;
   }
 
   h1, h2, h3, h4, h5, h6 {

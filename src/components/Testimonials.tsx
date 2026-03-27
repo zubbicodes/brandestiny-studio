@@ -2,103 +2,112 @@ import { motion } from "framer-motion";
 
 const testimonials = [
   {
-    name: "Kristina Rose",
-    role: "Co-Founder, Argonauts",
-    text: "Brandestiny has an amazing customer support! Plays a vital role after/in service, the people are very supportive, and respond back quickly with the fixes.",
-    avatar: "KR",
+    name: "Kristina Kosa",
+    role: "Co-Founder, Yoginess",
+    text: "Brandestiny has an amazing customer support! plays a vital role aftersale service, the people are very really supportive, and also respond back quickly with the fixes.",
+    avatar: "https://i.pravatar.cc/150?u=kristina",
   },
   {
-    name: "James Mitchell",
-    role: "CEO, TechVault",
-    text: "The team delivered beyond expectations. Our brand identity went from generic to extraordinary. The attention to detail in every deliverable was exceptional.",
-    avatar: "JM",
+    name: "Kristina Kosa",
+    role: "Co-Founder, Yoginess",
+    text: "Brandestiny has an amazing customer support! plays a vital role aftersale service, the people are very really supportive, and also respond back quickly with the fixes.",
+    avatar: "https://i.pravatar.cc/150?u=kristina",
     featured: true,
   },
   {
-    name: "Sarah Chen",
-    role: "Founder, NovaBridge",
-    text: "Working with Brandestiny was transformative. They didn't just design a website — they created an experience that perfectly communicates our brand story.",
-    avatar: "SC",
+    name: "Kristina Kosa",
+    role: "Co-Founder, Yoginess",
+    text: "Brandestiny has an amazing customer support! plays a vital role aftersale service, the people are very really supportive, and also respond back quickly with the fixes.",
+    avatar: "https://i.pravatar.cc/150?u=kristina",
+  },
+  {
+    name: "Kristina Kosa",
+    role: "Co-Founder, Yoginess",
+    text: "Brandestiny has an amazing customer support! plays a vital role aftersale service, the people are very really supportive, and also respond back quickly with the fixes.",
+    avatar: "https://i.pravatar.cc/150?u=kristina",
   },
 ];
 
 const Testimonials = () => {
+  // Double the testimonials for infinite marquee effect
+  const doubledTestimonials = [...testimonials, ...testimonials, ...testimonials];
+
   return (
-    <section className="w-full px-6 md:px-10 py-24 md:py-36" style={{ background: "var(--black-2)" }}>
+    <section className="w-full py-24 md:py-36 overflow-hidden" style={{ background: "var(--black-2)" }}>
+      {/* Heading with Circle Icon */}
       <motion.div
-        className="text-center mb-14"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
+        className="flex items-center justify-center gap-3 mb-16"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
       >
-        <span className="text-[#fde3c6] text-sm font-grotesk tracking-wider">✦ What they say about us</span>
+        <div className="w-3 h-3 rounded-full border border-white/40" />
+        <h2 className="text-white text-xl md:text-2xl font-display font-medium tracking-tight">
+          What they say about us
+        </h2>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-6xl mx-auto">
-        {testimonials.map((t, i) => (
-          <motion.div
-            key={i}
-            className={`p-7 flex flex-col ${
-              t.featured ? "bg-[#121212]" : ""
-            }`}
-            style={{
-              border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: 0,
-            }}
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1, duration: 0.6 }}
-          >
-            {/* Stars */}
-            <div className="flex gap-1 mb-5">
-              {[...Array(5)].map((_, j) => (
-                <span key={j} className="text-[#fde3c6] text-sm">★</span>
-              ))}
-            </div>
+      {/* Auto Scroll Marquee with Pause on Hover */}
+      <div className="relative flex overflow-hidden group/marquee">
+        <motion.div 
+          className="flex gap-8"
+          animate={{
+            x: [0, -1712], // Exactly 4 cards (400px each) + 4 gaps (28px/7rem each)
+          }}
+          transition={{
+            x: {
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 40,
+              ease: "linear",
+            },
+          }}
+          // This allows stopping the animation on hover
+          whileHover={{ animationPlayState: "paused" }}
+        >
+          {doubledTestimonials.map((t, i) => (
+            <motion.div
+              key={i}
+              className="flex-shrink-0 w-[300px] md:w-[400px] p-8 md:p-10 rounded-[32px] flex flex-col min-h-[450px] transition-all duration-500 bg-[#1a1a1a] text-white hover:bg-white hover:text-black group/card border border-white/5"
+              whileHover={{ scale: 1.01, y: -5 }}
+            >
+              {/* Large Quote Icon */}
+              <div className="mb-8">
+                <svg width="40" height="30" viewBox="0 0 40 30" fill="currentColor" className="text-[#d4b499]">
+                  <path d="M11.4 0C5.1 0 0 5.1 0 11.4V30H15.2V11.4H7.6C7.6 9.3 9.3 7.6 11.4 7.6V0ZM36.2 0C29.9 0 24.8 5.1 24.8 11.4V30H40V11.4H32.4C32.4 9.3 34.1 7.6 36.2 7.6V0Z" />
+                </svg>
+              </div>
 
-            {t.featured && (
-              <div className="mb-5 w-full aspect-[5/3] flex items-center justify-center overflow-hidden" style={{ background: "var(--black-2)" }}>
-                <motion.span
-                  className="text-[#fde3c6] text-4xl"
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              {/* Testimonial Text */}
+              <p className="text-lg md:text-xl leading-relaxed mb-8 flex-1 font-display text-white/80 group-hover/card:text-black">
+                {t.text}
+              </p>
+
+              {/* Featured Call to Action - Now only shows on hover or if needed */}
+              <div className="mb-10 text-center opacity-0 group-hover/card:opacity-100 transition-opacity">
+                <a 
+                  href="#contact" 
+                  className="text-black font-bold text-lg border-b-2 border-black/10 hover:border-black transition-all pb-1"
                 >
-                  ✦
-                </motion.span>
+                  Book A Call
+                </a>
               </div>
-            )}
 
-            {t.featured && (
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 text-[#fde3c6] text-xs font-semibold tracking-wider uppercase px-4 py-2.5 w-fit mb-5 hover:bg-[#fde3c6] hover:text-[#020202] transition-all duration-300"
-                style={{ border: "1px solid rgba(253,227,198,0.3)", borderRadius: 100 }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                Book A Call
-              </a>
-            )}
-
-            <p className="text-white/70 text-sm leading-relaxed mb-8 flex-1">{t.text}</p>
-
-            <div className="flex items-center gap-3 mt-auto">
-              <div
-                className="w-9 h-9 rounded-full flex items-center justify-center"
-                style={{ border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.05)" }}
-              >
-                <span className="text-white text-xs font-semibold">{t.avatar}</span>
+              {/* Footer: Avatar + Info */}
+              <div className="flex items-center gap-4 mt-auto">
+                <img 
+                  src={t.avatar} 
+                  alt={t.name} 
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+                <div className="text-left">
+                  <p className="font-bold text-sm text-white group-hover/card:text-black">{t.name}</p>
+                  <p className="text-xs text-white/40 group-hover/card:text-black/60">{t.role}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-white text-sm font-medium">{t.name}</p>
-                <p className="text-white/40 text-xs">{t.role}</p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );

@@ -1,12 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const navItems = [
-  { label: "HOME", number: "01", href: "#hero" },
-  { label: "ABOUT US", number: "02", href: "#story" },
-  { label: "CASE STUDIES", number: "03", href: "#projects" },
-  { label: "SERVICES", number: "04", href: "#services" },
-  { label: "LET'S CONNECT", number: "05", href: "#contact" },
+  { label: "HOME", number: "01", href: "/" },
+  { label: "CASE STUDIES", number: "02", href: "/case-studies" },
 ];
 
 const NavPill = () => {
@@ -14,6 +12,8 @@ const NavPill = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const pillRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Scroll progress tracker -> horizontal fill
   useEffect(() => {
@@ -47,9 +47,26 @@ const NavPill = () => {
     timeoutRef.current = setTimeout(() => setIsOpen(false), 200);
   };
 
-  const scrollTo = (href: string) => {
+  const handleNavClick = (href: string) => {
     setIsOpen(false);
-    const el = document.querySelector(href);
+
+    if (href.startsWith("/#")) {
+      const id = href.substring(2);
+      if (location.pathname === "/") {
+        const el = document.getElementById(id);
+        el?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        navigate(href);
+      }
+    } else {
+      navigate(href);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const scrollTo = (id: string) => {
+    setIsOpen(false);
+    const el = document.querySelector(id);
     el?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -64,12 +81,12 @@ const NavPill = () => {
         }}
         initial={false}
         animate={{
-          width: isOpen ? 380 : 358,
-          height: isOpen ? "min(700px, 85vh)" : 54, // Collapsed height: 54px precisely
+          width: isOpen ? 385 : 363,
+          height: isOpen ? "90vh" : 54, // Full screen relative height
         }}
         transition={{
-          height: { duration: 0.5, ease: [0.4, 0, 0.2, 1] },
-          width: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
+          height: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+          width: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -79,18 +96,31 @@ const NavPill = () => {
           className="absolute inset-0 z-0"
           style={{
             borderRadius: "inherit",
-            backgroundColor: "rgba(40, 40, 40, 0.25)",
-            backdropFilter: "blur(30px)",
-            WebkitBackdropFilter: "blur(30px)",
+            background: "linear-gradient(180deg, rgba(20, 20, 20, 0.9) 0%, rgba(30, 30, 30, 0.8) 100%)",
+            backdropFilter: "blur(40px)",
+            WebkitBackdropFilter: "blur(40px)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
           }}
         />
 
+        {/* ── Subtle inner gradient overlay for that "soft" look in the image ── */}
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="absolute inset-0 z-[1] pointer-events-none"
+            style={{
+              background: "radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 70%)"
+            }}
+          />
+        )}
+
         {/* ── Scroll progress fill — the gray fill that grows left→right ── */}
         <div
-          className="absolute top-0 left-0 bottom-0 z-0"
+          className="absolute top-0 left-0 bottom-0 z-0 h-[54px]" // Only fill the collapsed pill part
           style={{
             width: `${scrollProgress * 100}%`,
-            backgroundColor: "rgba(61, 61, 61, 0.55)",
+            backgroundColor: "rgba(255, 255, 255, 0.08)",
             borderRadius: "inherit",
             transition: "width 0.1s ease-out",
           }}
@@ -116,10 +146,10 @@ const NavPill = () => {
         {/* Exactly positioned over the inner header strip */}
         <div
           className="absolute z-[3] flex items-center justify-between cursor-pointer interactive"
-          style={{ 
-            top: 5, 
-            left: 5, 
-            right: 5, 
+          style={{
+            top: 5,
+            left: 5,
+            right: 5,
             height: 44,
             paddingLeft: 20, // Perfectly indents the text & dots
             paddingRight: 16,
@@ -131,6 +161,10 @@ const NavPill = () => {
         >
           {/* Logo text — using custom HelveticaNeue Ext file */}
           <span
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNavClick("/");
+            }}
             className="select-none whitespace-nowrap"
             style={{
               fontFamily: "'HelveticaNeue Ext', sans-serif",
@@ -176,32 +210,36 @@ const NavPill = () => {
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              className="relative z-[1] flex flex-col flex-1 justify-between w-full"
+              className="relative z-[1] flex flex-col flex-1 justify-between w-full max-h-[90vh] overflow-hidden"
               style={{
                 marginTop: 64, // Pushes it exactly below the header strip
                 paddingLeft: 25,
                 paddingRight: 25,
                 paddingBottom: 25,
               }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, delay: 0.15 }}
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             >
               {/* Nav links */}
-              <div className="flex flex-col gap-[12px]">
+              <div className="flex flex-col gap-8 overflow-y-auto no-scrollbar pt-12">
                 {navItems.map((item, i) => (
                   <motion.button
                     key={item.label}
-                    onClick={() => scrollTo(item.href)}
-                    className="group flex items-center gap-[10px] relative cursor-pointer text-left w-fit interactive"
+                    onClick={() => handleNavClick(item.href)}
+                    className="group flex items-center gap-[15px] relative cursor-pointer text-left w-fit interactive"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: 0.1 + i * 0.05 }}
+                    transition={{ duration: 0.4, delay: 0.1 + i * 0.05 }}
                   >
                     <span
-                      className="text-white leading-[1.05] tracking-normal uppercase"
-                      style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 38, fontWeight: 500 }}
+                      className="text-white leading-[1] tracking-tight uppercase"
+                      style={{
+                        fontFamily: "'Helvetica Now Display', 'DM Sans', sans-serif",
+                        fontSize: 40,
+                        fontWeight: 600
+                      }}
                     >
                       {item.label}
                     </span>
@@ -209,46 +247,36 @@ const NavPill = () => {
                       className="self-start"
                       style={{
                         fontFamily: "'Space Grotesk', sans-serif",
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: 300,
-                        color: "#7a7a7a",
-                        marginTop: 4,
+                        color: "rgba(255, 255, 255, 0.3)",
+                        marginTop: 6,
                       }}
                     >
                       {item.number}
                     </span>
-                    {/* Animated underline */}
-                    <span className="absolute bottom-0 left-0 h-[1px] bg-white w-[1%] group-hover:w-full transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]" />
                   </motion.button>
                 ))}
               </div>
 
               {/* CTA at bottom */}
               <motion.div
-                className="mt-auto pt-8"
+                className="mt-auto pt-10"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.4 }}
+                transition={{ duration: 0.4, delay: 0.4 }}
               >
                 <button
-                  onClick={() => scrollTo("#contact")}
+                  onClick={() => handleNavClick("/#contact")}
                   className="group flex items-center gap-[10px] relative cursor-pointer text-left w-fit interactive"
                 >
                   <span
-                    className="text-white leading-[1.05] uppercase"
-                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 38, fontWeight: 500 }}
+                    className="text-white leading-[1] uppercase"
+                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 34, fontWeight: 600 }}
                   >
-                    BOOK INTRO CALL
+                    Let's Connect
                   </span>
-                  <span className="absolute bottom-0 left-0 h-[1px] bg-white w-[1%] group-hover:w-full transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]" />
                 </button>
-
-                <motion.button
-                  onClick={() => setIsOpen(false)}
-                  className="mt-6 text-[#7a7a7a] text-sm flex items-center gap-2 hover:text-white transition-colors interactive"
-                >
-                  <span>↓</span>
-                </motion.button>
               </motion.div>
             </motion.div>
           )}

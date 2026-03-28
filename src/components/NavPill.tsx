@@ -4,10 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 const navItems = [
   { label: "HOME", number: "01", href: "/" },
-  { label: "ABOUT US", number: "02", href: "/#story" },
-  { label: "CASE STUDIES", number: "03", href: "/case-studies" },
-  { label: "SERVICES", number: "04", href: "/#services" },
-  { label: "LET'S CONNECT", number: "05", href: "/#contact" },
+  { label: "CASE STUDIES", number: "02", href: "/case-studies" },
 ];
 
 const NavPill = () => {
@@ -52,7 +49,7 @@ const NavPill = () => {
 
   const handleNavClick = (href: string) => {
     setIsOpen(false);
-    
+
     if (href.startsWith("/#")) {
       const id = href.substring(2);
       if (location.pathname === "/") {
@@ -108,7 +105,7 @@ const NavPill = () => {
 
         {/* ── Subtle inner gradient overlay for that "soft" look in the image ── */}
         {isOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="absolute inset-0 z-[1] pointer-events-none"
@@ -149,10 +146,10 @@ const NavPill = () => {
         {/* Exactly positioned over the inner header strip */}
         <div
           className="absolute z-[3] flex items-center justify-between cursor-pointer interactive"
-          style={{ 
-            top: 5, 
-            left: 5, 
-            right: 5, 
+          style={{
+            top: 5,
+            left: 5,
+            right: 5,
             height: 44,
             paddingLeft: 20, // Perfectly indents the text & dots
             paddingRight: 16,
@@ -238,10 +235,10 @@ const NavPill = () => {
                   >
                     <span
                       className="text-white leading-[1] tracking-tight uppercase"
-                      style={{ 
-                        fontFamily: "'Helvetica Now Display', 'DM Sans', sans-serif", 
-                        fontSize: 40, 
-                        fontWeight: 600 
+                      style={{
+                        fontFamily: "'Helvetica Now Display', 'DM Sans', sans-serif",
+                        fontSize: 40,
+                        fontWeight: 600
                       }}
                     >
                       {item.label}
@@ -277,7 +274,7 @@ const NavPill = () => {
                     className="text-white leading-[1] uppercase"
                     style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 34, fontWeight: 600 }}
                   >
-                    BOOK INTRO CALL
+                    Let's Connect
                   </span>
                 </button>
               </motion.div>

@@ -84,7 +84,7 @@ const FeaturedProjects = () => {
         </div>
 
         {/* Right: Featured Projects Heading + CTA (Pinned) */}
-        <div ref={rightColumnRef} className="md:w-2/5 md:h-screen flex flex-col justify-center">
+        <div ref={rightColumnRef} className="md:w-2/5 flex flex-col">
           <div className="flex flex-col gap-12">
             {/* Heading Area */}
             <div className="flex justify-between items-start">

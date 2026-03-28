@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const navItems = [
-  { label: "HOME", number: "01", href: "#hero" },
-  { label: "ABOUT US", number: "02", href: "#story" },
-  { label: "CASE STUDIES", number: "03", href: "#projects" },
-  { label: "SERVICES", number: "04", href: "#services" },
-  { label: "LET'S CONNECT", number: "05", href: "#contact" },
+  { label: "HOME", number: "01", href: "/" },
+  { label: "ABOUT US", number: "02", href: "/#story" },
+  { label: "CASE STUDIES", number: "03", href: "/case-studies" },
+  { label: "SERVICES", number: "04", href: "/#services" },
+  { label: "LET'S CONNECT", number: "05", href: "/#contact" },
 ];
 
 const NavPill = () => {
@@ -14,6 +15,8 @@ const NavPill = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const pillRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Scroll progress tracker -> horizontal fill
   useEffect(() => {
@@ -47,9 +50,26 @@ const NavPill = () => {
     timeoutRef.current = setTimeout(() => setIsOpen(false), 200);
   };
 
-  const scrollTo = (href: string) => {
+  const handleNavClick = (href: string) => {
     setIsOpen(false);
-    const el = document.querySelector(href);
+    
+    if (href.startsWith("/#")) {
+      const id = href.substring(2);
+      if (location.pathname === "/") {
+        const el = document.getElementById(id);
+        el?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        navigate(href);
+      }
+    } else {
+      navigate(href);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const scrollTo = (id: string) => {
+    setIsOpen(false);
+    const el = document.querySelector(id);
     el?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -131,6 +151,10 @@ const NavPill = () => {
         >
           {/* Logo text — using custom HelveticaNeue Ext file */}
           <span
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNavClick("/");
+            }}
             className="select-none whitespace-nowrap"
             style={{
               fontFamily: "'HelveticaNeue Ext', sans-serif",
@@ -193,7 +217,7 @@ const NavPill = () => {
                 {navItems.map((item, i) => (
                   <motion.button
                     key={item.label}
-                    onClick={() => scrollTo(item.href)}
+                    onClick={() => handleNavClick(item.href)}
                     className="group flex items-center gap-[10px] relative cursor-pointer text-left w-fit interactive"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -231,7 +255,7 @@ const NavPill = () => {
                 transition={{ duration: 0.3, delay: 0.4 }}
               >
                 <button
-                  onClick={() => scrollTo("#contact")}
+                  onClick={() => handleNavClick("/#contact")}
                   className="group flex items-center gap-[10px] relative cursor-pointer text-left w-fit interactive"
                 >
                   <span

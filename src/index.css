@@ -101,6 +101,15 @@
     overscroll-behavior: contain;
   }
 
+  /* Custom utility to hide scrollbar but keep functionality */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
   .lenis.lenis-stopped {
     overflow: hidden;
   }

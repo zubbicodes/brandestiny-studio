@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Link } from "react-router-dom";
 
 import project1 from "@/assets/project-1.png";
 import project2 from "@/assets/project-2.png";
@@ -147,14 +148,13 @@ const FeaturedProjects = () => {
               Projects
             </h2>
 
-            <a
-              href="#projects"
+            <Link
+              to="/case-studies"
               className="group inline-flex items-center justify-between gap-4 border border-white/20 text-white text-[11px] font-bold tracking-[0.2em] uppercase px-8 py-5 hover:bg-white hover:text-[#020202] hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 w-full rounded-full"
-              onClick={(e) => e.preventDefault()}
             >
               View All
               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

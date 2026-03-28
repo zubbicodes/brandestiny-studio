@@ -15,145 +15,99 @@ import project6 from "@/assets/project-6.png";
 gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
-  { id: 1, image: project1, name: "Furniture & Woodwork", category: "Art Direction", year: "2026", tags: ["Web Design", "Development"] },
-  { id: 2, image: project2, name: "FinTech Dashboard", category: "UX/UI Design", year: "2025", tags: ["Mobile App", "Design"] },
-  { id: 3, image: project3, name: "Luxury Brand Identity", category: "Branding", year: "2025", tags: ["Brand Identity", "Print"] },
-  { id: 4, image: project4, name: "Agency Portfolio", category: "Web Design", year: "2025", tags: ["Web Design", "3D", "Development"] },
-  { id: 5, image: project5, name: "Urban Campaign", category: "Art Direction", year: "2024", tags: ["Campaign", "Advertising"] },
-  { id: 6, image: project6, name: "Tech Product Launch", category: "3D & Motion", year: "2024", tags: ["3D", "Motion", "Development"] },
+  { id: 1, image: project1, name: "BRANT", year: "2025", tags: ["Art Direction", "Website Design", "Brand", "Development"] },
+  { id: 2, image: project2, name: "MONOLITH", year: "2025", tags: ["3D Modeling", "UX/UI Design", "Brand Strategy"] },
+  { id: 3, image: project3, name: "SABLE", year: "2025", tags: ["Mobile App", "Brand Identity", "Development"] },
+  { id: 4, image: project4, name: "SEEN", year: "2025", tags: ["Art Direction", "Web Design", "3D Animation"] },
+  { id: 5, image: project5, name: "GLOW", year: "2024", tags: ["Campaign", "Advertising"] },
+  { id: 6, image: project6, name: "TECH", year: "2024", tags: ["3D", "Motion", "Development"] },
 ];
 
 const FeaturedProjects = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const rightColumnRef = useRef<HTMLDivElement>(null);
-  const rightTextRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || !rightColumnRef.current) return;
 
     const mm = gsap.matchMedia();
 
     mm.add("(min-width: 768px)", () => {
-      // Pinning the right column
-      if (rightColumnRef.current && containerRef.current) {
-        ScrollTrigger.create({
-          trigger: rightColumnRef.current,
-          start: "top top",
-          endTrigger: containerRef.current,
-          end: "bottom bottom",
-          pin: true,
-        });
-      }
-    });
-
-    // Project cards animation
-    const cards = gsap.utils.toArray(".project-card");
-    cards.forEach((card: any, i) => {
-      gsap.from(card, {
-        scrollTrigger: {
-          trigger: card,
-          start: "top 85%",
-          toggleActions: "play none none none"
-        },
-        opacity: 0,
-        y: 50,
-        duration: 0.8,
-        delay: (i % 2) * 0.1,
-        ease: "power3.out"
+      ScrollTrigger.create({
+        trigger: rightColumnRef.current,
+        start: "top top",
+        endTrigger: containerRef.current,
+        end: "bottom bottom",
+        pin: true,
       });
     });
-
-    // Right text area animation
-    if (rightTextRef.current) {
-      gsap.from(rightTextRef.current, {
-        scrollTrigger: {
-          trigger: rightTextRef.current,
-          start: "top 85%",
-          toggleActions: "play none none none"
-        },
-        opacity: 0,
-        x: 30,
-        duration: 0.8,
-        ease: "power3.out"
-      });
-    }
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} id="projects" className="w-full py-20 md:py-32" style={{ background: "var(--black-2)" }}>
+    <section ref={containerRef} id="projects" className="w-full py-20 bg-black">
       <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col md:flex-row gap-16 md:gap-24 items-start">
-        {/* Left: project grid (Scrollable) */}
-        <div className="md:w-[60%] space-y-1">
-          {projects.map((project, i) => (
-            <a
-              key={project.id}
-              href="#"
-              className="project-card block relative aspect-[16/10] overflow-hidden group cursor-pointer"
-              onClick={(e) => e.preventDefault()}
-            >
-              <img
-                src={project.image}
-                alt={project.name}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                loading="lazy"
-              />
-              
-              {/* Image Overlays / Annotations from image */}
-              <div className="absolute top-6 left-6 z-[2]">
-                <div className="w-2 h-2 bg-white/40 rounded-full" />
-              </div>
-              <div className="absolute top-10 left-16 z-[2]">
-                <div className="w-12 h-12 border border-white/20 rounded-full" />
+        {/* Left: Project Cards Grid (Scrollable) */}
+        <div className="md:w-3/5 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-20">
+          {projects.map((project) => (
+            <div key={project.id} className="group flex flex-col cursor-pointer">
+              {/* Card Header */}
+              <div className="flex justify-between items-baseline mb-4">
+                <span className="text-white text-[12px] font-bold tracking-[0.15em] uppercase">
+                  {project.name}
+                </span>
+                <span className="text-white/40 text-[12px] font-medium tracking-widest">
+                  {project.year}
+                </span>
               </div>
 
-              {/* Bottom info */}
-              <div className="absolute inset-0 z-[2] flex flex-col justify-end p-6 md:p-10 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <div className="flex justify-between items-end">
-                  <div>
-                    <span className="text-[#a0a0a0] text-[10px] font-grotesk tracking-[0.2em] uppercase block mb-1">
-                      {project.category}
-                    </span>
-                    <h3 className="text-white text-xl font-bold">{project.name}</h3>
-                  </div>
-                  <div className="flex gap-4 text-[#a0a0a0] text-[10px] font-grotesk uppercase tracking-wider">
-                    {project.tags.join(" • ")}
-                  </div>
-                </div>
+              {/* Project Image Container */}
+              <div className="relative aspect-square bg-[#0c0c0c] overflow-hidden mb-6 rounded-sm">
+                <img
+                  src={project.image}
+                  alt={project.name}
+                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.05] transition-all duration-1000 ease-out"
+                  loading="lazy"
+                />
+                <Link to={`/case-studies/${project.id}`} className="absolute inset-0 z-10" />
               </div>
-            </a>
+
+              {/* Tags / Categories List */}
+              <div className="flex flex-col gap-1">
+                {project.tags.map((tag, index) => (
+                  <span key={index} className="text-white/40 text-[12px] font-medium tracking-wide leading-relaxed">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
 
-        {/* Right: heading + CTA — Pinned using GSAP */}
-        <div ref={rightColumnRef} className="md:w-[40%] md:h-screen flex flex-col justify-center">
-          <div ref={rightTextRef}>
-            <div className="flex items-baseline gap-4 mb-2">
-              <h2
-                className="font-display text-white font-bold leading-[0.9]"
-                style={{ fontSize: "clamp(3.5rem, 8vw, 8.5rem)" }}
-              >
-                Featured
+        {/* Right: Featured Projects Heading + CTA (Pinned) */}
+        <div ref={rightColumnRef} className="md:w-2/5 md:h-screen flex flex-col justify-center">
+          <div className="flex flex-col gap-12">
+            {/* Heading Area */}
+            <div className="flex justify-between items-start">
+              <h2 className="font-display text-white text-6xl md:text-7xl lg:text-8xl font-bold leading-[0.9] tracking-tight">
+                Featured <br /> Projects
               </h2>
-              <span
-                className="font-display text-[#333] font-bold leading-none"
-                style={{ fontSize: "clamp(3.5rem, 8vw, 8.5rem)" }}
-              >
-                {projects.length.toString().padStart(2, "0")}
+              <span className="font-display text-white/20 text-6xl md:text-7xl lg:text-8xl font-bold leading-none">
+                11
               </span>
             </div>
-            <h2
-              className="font-display text-white font-bold leading-[0.9] mb-12"
-              style={{ fontSize: "clamp(3.5rem, 8vw, 8.5rem)" }}
-            >
-              Projects
-            </h2>
 
+            {/* Custom Styled View All Link */}
             <Link
               to="/case-studies"
-              className="group inline-flex items-center justify-between gap-4 border border-white/20 text-white text-[11px] font-bold tracking-[0.2em] uppercase px-8 py-5 hover:bg-white hover:text-[#020202] hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 w-full rounded-full"
+              className="group relative flex items-center justify-between border border-white/20 rounded-full px-8 py-5 hover:bg-white hover:text-black transition-all duration-500 overflow-hidden"
             >
-              View All
-              <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              <span className="text-[11px] font-bold tracking-[0.2em] uppercase z-10">
+                View All
+              </span>
+              <span className="text-[12px] font-medium opacity-60 z-10 group-hover:opacity-100 transition-opacity">
+                44
+              </span>
+              <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
             </Link>
           </div>
         </div>

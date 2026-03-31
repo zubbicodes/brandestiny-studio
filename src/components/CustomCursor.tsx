@@ -43,7 +43,7 @@ const CustomCursor = () => {
     <div className="fixed inset-0 pointer-events-none z-[9999] hidden md:block">
       {/* Main Follower Ring */}
       <motion.div
-        className="absolute w-10 h-10 border border-[#2d5af1]/40 rounded-full"
+        className="absolute w-10 h-10 border border-white/40 rounded-full"
         style={{
           x: cursorX,
           y: cursorY,
@@ -52,14 +52,14 @@ const CustomCursor = () => {
         }}
         animate={{
           scale: isHovering ? 1.8 : 1,
-          backgroundColor: isHovering ? "rgba(45, 90, 241, 0.1)" : "rgba(45, 90, 241, 0)",
+          backgroundColor: isHovering ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0)",
         }}
         transition={{ type: "spring", damping: 20, stiffness: 150 }}
       />
 
       {/* Center Dot */}
       <motion.div
-        className="absolute w-1.5 h-1.5 bg-[#2d5af1] rounded-full"
+        className="absolute w-1.5 h-1.5 bg-white rounded-full"
         style={{
           left: mousePos.x,
           top: mousePos.y,

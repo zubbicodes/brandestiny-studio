@@ -1,12 +1,34 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useRef } from "react";
 
 const services = ["WEBSITE", "MOBILE APP", "WEB APP", "BRAND", "SOCIAL MEDIA"];
 
 const CTASection = () => {
+  const containerRef = useRef<HTMLElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Background elements will gradually blur more as you scroll down through the section
+  const dynamicBlur = useTransform(scrollYProgress, [0.3, 0.8], ["blur(0px)", "blur(60px)"]);
+
   return (
-    <section id="contact" className="w-full px-6 md:px-10 py-24 md:py-36" style={{ background: "var(--black-2)" }}>
-      <div className="text-center max-w-5xl mx-auto">
+    <section ref={containerRef} id="contact" className="w-full relative overflow-hidden px-6 md:px-10 py-24 md:py-36" style={{ background: "var(--black-2)" }}>
+      
+      {/* Background Visuals that Blur on Scroll */}
+      <motion.div 
+        className="absolute inset-0 z-0 pointer-events-none"
+        style={{ filter: dynamicBlur }}
+      >
+        <div className="absolute top-[10%] left-[10%] w-[300px] h-[300px] bg-[#2d5af1]/20 rounded-full mix-blend-screen blur-[40px]" />
+        <div className="absolute bottom-[20%] right-[10%] w-[400px] h-[400px] bg-[#fde3c6]/10 rounded-full mix-blend-screen blur-[60px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/[0.03] rounded-full mix-blend-screen blur-[80px]" />
+      </motion.div>
+
+      <div className="text-center relative z-10 max-w-5xl mx-auto">
         <motion.p
           className="text-white/50 text-lg mb-8 font-grotesk"
           initial={{ opacity: 0 }}

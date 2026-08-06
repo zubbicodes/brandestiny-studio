@@ -35,8 +35,8 @@ const platformLinks = [
 
 const contactLinks = [
   { label: "Email", value: "info@brandestiny.co", href: "mailto:info@brandestiny.co", icon: "mail" },
-  { label: "US Phone Number", value: "+1 (213) 993-0155", href: "tel:+12139930155", icon: "us" },
-  { label: "UK Phone Number", value: "+ 44 (020) 382-9286", href: "tel:+440203829286", icon: "uk" },
+  { label: "US Phone Number", value: "+1 (213) 993-0155", address: "15301 Ventura Blvd, Sherman Oaks, CA 91403, USA", href: "tel:+12139930155", icon: "us" },
+  { label: "UK Phone Number", value: "+ 44 (020) 382-9286", address: "Suite 7, 12 Nether Hall Road, Doncaster, England, DN1 2PW", href: "tel:+440203829286", icon: "uk" },
   { label: "Company Number", value: "16558368", href: null, icon: "company" },
 ];
 
@@ -422,13 +422,18 @@ const Footer = () => {
                       <span className="text-sm font-medium leading-snug text-white">
                         {item.value}
                       </span>
+                      {"address" in item && (
+                        <span className="text-sm font-medium leading-snug text-white">
+                          {item.address}
+                        </span>
+                      )}
                     </span>
                   </>
                 );
 
                 if (!item.href) {
                   return (
-                    <div key={item.label} className="flex items-start gap-3">
+                    <div key={item.label} className={`flex gap-3 ${item.icon === "us" || item.icon === "uk" ? "items-center" : "items-start"}`}>
                       {content}
                     </div>
                   );
@@ -438,7 +443,7 @@ const Footer = () => {
                   <a
                     key={item.label}
                     href={item.href}
-                    className="flex w-fit items-start gap-3 transition-colors duration-300 hover:text-[#fde3c6] interactive"
+                    className={`flex w-fit gap-3 transition-colors duration-300 hover:text-[#fde3c6] interactive ${item.icon === "us" || item.icon === "uk" ? "items-center" : "items-start"}`}
                     aria-label={`${item.label}: ${item.value}`}
                   >
                     {content}

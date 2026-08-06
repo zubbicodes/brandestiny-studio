@@ -49,8 +49,8 @@ const FlagIcon = ({ country }: { country: "uk" | "us" }) => {
 
 const LetsConnect = () => {
   const offices = [
-    { flag: "uk" as const, city: "Doncaster", country: "United Kingdom" },
-    { flag: "us" as const, city: "Sherman Oaks", country: "United States" },
+    { flag: "uk" as const, city: "Doncaster", country: "Suite 7, 12 Nether Hall Road, Doncaster, England, DN1 2PW" },
+    { flag: "us" as const, city: "Sherman Oaks", country: "15301 Ventura Blvd, Sherman Oaks, CA 91403, USA" },
   ];
 
   return (
